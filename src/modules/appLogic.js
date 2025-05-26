@@ -63,5 +63,4 @@ export {
     setCurrentProject,
     getCurrentProject,
     addTodoToCurrentProject,
-    getProjects,
 }
