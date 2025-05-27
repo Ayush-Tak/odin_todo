@@ -40,6 +40,35 @@
             </div>
         </form>
     </dialog>
+    <dialog id="add-todo-dialog">
+        <form method="dialog">
+            <h2>Add New Todo</h2>
+            <div>
+                <label for="dialog-todo-title-input">Title:</label>
+                <input type="text" id="dialog-todo-title-input" name="todoTitle" required>
+            </div>
+                        <div>
+                <label for="dialog-todo-description-input">Description:</label>
+                <textarea id="dialog-todo-description-input" name="todoDescription"></textarea>
+            </div>
+            <div>
+                <label for="dialog-todo-duedate-input">Due Date:</label>
+                <input type="date" id="dialog-todo-duedate-input" name="todoDueDate" required>
+            </div>
+            <div>
+                <label for="dialog-todo-priority-select">Priority:</label>
+                <select id="dialog-todo-priority-select" name="todoPriority">
+                    <option value="low">Low</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" id="dialog-submit-todo-btn">Save Todo</button>
+                <button type="button" id="dialog-cancel-todo-btn">Cancel</button>
+            </div>
+        </form>
+    </dialog>
     
 </body>
 </html>
