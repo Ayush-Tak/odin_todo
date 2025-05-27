@@ -13,6 +13,15 @@ const dialogProjectNameInput = document.getElementById('dialog-project-name-inpu
 const dialogSubmitProjectBtn = document.getElementById("dialog-submit-project-btn");
 const dialogCancelProjectBtn = document.getElementById("dialog-cancel-project-btn");
 
+// Todo dialog elements:
+const addTodoDialog = document.getElementById("add-todo-dialog");
+const dialogTodoTitleInput=document.getElementById("dialog-todo-title-input");
+const dialogTodoDescriptionInput = document.getElementById("dialog-todo-description-input");
+const dialogTodoDueDateInput = document.getElementById("dialog-todo-duedate-input");
+const dialogTodoPrioritySelect = document.getElementById("dialog-todo-priority-select");
+const dialogSubmitTodoBtn = document.getElementById("dialog-submit-todo-btn");
+const dialogCancelTodoBtn = document.getElementById("dialog-cancel-todo-btn");
+
 
 export function renderProjects(){
     if (!projectsListUL){
@@ -92,6 +101,28 @@ function handleDialogSubmitProject(){
     }
 }
 
+// todo handler:
+function handleDialogSubmitTodo(){
+    const title =       dialogTodoTitleInput.value.trim();
+    const description = dialogTodoDescriptionInput.value.trim();
+    const dueDate =     dialogTodoDueDateInput.value;
+    const priority =    dialogTodoPrioritySelect.value;
+
+    if(title && dueDate){
+        const newTodo = appLogic.addTodoToCurrentProject(title,description,dueDate,priority);
+        if (newTodo){
+            renderTodos();
+            dialogTodoTitleInput.value='';
+            dialogTodoDescriptionInput.value='';
+            dialogTodoDueDateInput.value='';
+            dialogTodoPrioritySelect.value='medium';
+            addTodoDialog.close();
+        }else {
+            alert("Could not add todo!!")
+        }
+    }
+}
+
 export function initializeUIEventListeners(){
     if (addProjectBtn && addProjectDialog){
         addProjectBtn.addEventListener('click',()=> {
@@ -117,6 +148,37 @@ export function initializeUIEventListeners(){
     if (addProjectDialog){
         addProjectDialog.addEventListener('close',()=>{
             console.log("Dialog closed for new project")
+        })
+    }
+
+    if(addTodoBtn && addTodoDialog){
+        addTodoBtn.addEventListener('click',()=>{
+            if (appLogic.getCurrentProject()){
+                addTodoDialog.showModal();
+            }else{
+                alert("please select a project first!")
+            }
+        });
+    }
+    if (dialogSubmitTodoBtn){
+        dialogSubmitTodoBtn.addEventListener('click',(event)=>{
+            event.preventDefault();
+            handleDialogSubmitTodo();
+        })
+    }
+    if (dialogCancelTodoBtn){
+        dialogCancelTodoBtn.addEventListener('click',()=>{
+            dialogTodoTitleInput.value='';
+            dialogTodoDescriptionInput.value='';
+            dialogTodoDueDateInput.value='';
+            dialogTodoPrioritySelect.value='medium';
+            addTodoDialog.close();
+        })
+    }
+
+    if (addTodoDialog){
+        addTodoDialog.addEventListener('close',()=>{
+            console.log("Todo add dialog closed");
         })
     }
 }
