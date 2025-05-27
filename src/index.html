@@ -28,6 +28,18 @@
             </div>
         </div>
     </main>
+    <dialog id="add-project-dialog">
+        <form method="dialog"> <!-- Using form with method="dialog" allows Enter to submit and Escape to cancel -->
+            <h2>Add New Project</h2>
+            <label for="dialog-project-name-input">Project Name:</label>
+            <input type="text" id="dialog-project-name-input" name="projectName" required>
+            <div>
+                <button type="submit" id="dialog-submit-project-btn">Save Project</button>
+                <button type="button" id="dialog-cancel-project-btn">Cancel</button> 
+                <!-- type="button" for cancel, or rely on form method="dialog" for Escape key -->
+            </div>
+        </form>
+    </dialog>
     
 </body>
 </html>
