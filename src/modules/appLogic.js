@@ -1,76 +1,93 @@
-import {createProject} from "./project.js";
-import {createTodoItem} from "./todoItem.js";
+import { createProject } from "./project.js";
+import { createTodoItem } from "./todoItem.js";
+import * as storage from "./storage.js";
 
-const projects =[];
+let projects = [];
 let currentProject = null;
 
-function initialize(){
-    // create a default project
-    if (projects.length===0){
+function initialize() {
+    const loadedProjects = storage.loadProjects();
+    if (loadedProjects && loadedProjects.length > 0) {
+        projects = loadedProjects;
+    } else {
         const defaultProject = createProject("Default Project");
         projects.push(defaultProject);
-        currentProject = defaultProject;
+        storage.saveProjects(projects);
+    }
+
+    if (projects.length > 0) {
+        currentProject = projects[0];
+    } else {
+        currentProject = null;
     }
 }
 
-function addProject(projectName){
+function addProject(projectName) {
     if (projects.find(project => project.name === projectName)) {
-        console.warn(`Project with name "${projectName}" already exists`);
         return null;
     }
     const newProject = createProject(projectName);
     projects.push(newProject);
+    storage.saveProjects(projects);
     return newProject;
 }
 
-function getProjects(){
+function getProjects() {
     return projects;
 }
 
-function setCurrentProject(projectName){
-    const project = projects.find(project => project.name === projectName);
+function setCurrentProject(projectName) {
+    const project = projects.find(p => p.name === projectName);
     if (project) {
         currentProject = project;
         return true;
     }
-    console.warn(`Project with name ${projectName} not found`);
     return false;
 }
-function getCurrentProject(){
-    if (!currentProject && projects.length >0){
+
+function getCurrentProject() {
+    if (!currentProject && projects.length > 0) {
         currentProject = projects[0];
     }
     return currentProject;
 }
 
-function addTodoToCurrentProject(title,description,dueDate,priority){
+function addTodoToCurrentProject(title, description, dueDate, priority) {
     const project = getCurrentProject();
-    if (project){
-        const newTodo = createTodoItem(title,description,dueDate,priority);
+    if (project) {
+        const newTodo = createTodoItem(title, description, dueDate, priority);
         project.addTodo(newTodo);
+        storage.saveProjects(projects);
         return newTodo;
-    }else {
-        console.error("No current project selected");
+    } else {
         return null;
     }
 }
 
-function deleteTodoFromCurrentProject(todoIndex){
+function deleteTodoFromCurrentProject(todoIndex) {
     const project = getCurrentProject();
-    if (project){
-        const success = project.removeTodoByIndex(parseInt(todoIndex,10));
+    if (project) {
+        const success = project.removeTodoByIndex(parseInt(todoIndex, 10));
+        if (success) {
+            storage.saveProjects(projects);
+        }
         return success;
     }
     return false;
 }
-function updateTodoInCurrentProject(index,newData){
+
+function updateTodoInCurrentProject(index, newData) {
     const project = getCurrentProject();
-    if (project){
-        const success = project.updateTodoAtIndex(parseInt(index,10),newData);
+    if (project) {
+        const success = project.updateTodoAtIndex(parseInt(index, 10), newData);
+        if (success) {
+            storage.saveProjects(projects);
+        }
         return success;
     }
     return false;
 }
+
 function getTodoFromCurrentProject(index) {
     const project = getCurrentProject();
     if (project) {
@@ -93,4 +110,4 @@ export {
     deleteTodoFromCurrentProject,
     updateTodoInCurrentProject,
     getTodoFromCurrentProject,
-}
+};
