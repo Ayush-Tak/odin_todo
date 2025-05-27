@@ -55,6 +55,15 @@ function addTodoToCurrentProject(title,description,dueDate,priority){
     }
 }
 
+function deleteTodoFromCurrentProject(todoIndex){
+    const project = getCurrentProject();
+    if (project){
+        const success = project.removeTodoByIndex(parseInt(todoIndex,10));
+        return success;
+    }
+    return false;
+}
+
 initialize();
 
 export {
@@ -63,4 +72,5 @@ export {
     setCurrentProject,
     getCurrentProject,
     addTodoToCurrentProject,
+    deleteTodoFromCurrentProject,
 }
