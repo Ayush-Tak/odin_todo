@@ -37,3 +37,14 @@
 .delete-todo-btn:hover {
     background-color: #d32f2f; /* Darker red */
 }
+
+/* ... existing styles ... */
+
+.todo-content-display {
+    cursor: pointer;
+    flex-grow: 1; /* Allow it to take available space */
+}
+
+.todo-content-display:hover {
+    text-decoration: underline;
+}

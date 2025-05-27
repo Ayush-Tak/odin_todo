@@ -69,6 +69,37 @@
             </div>
         </form>
     </dialog>
+    <dialog id="edit-todo-dialog">
+        <form method="dialog">
+            <h2>Edit Todo</h2>
+            <input type="hidden" id="edit-todo-index-input"> <!-- To store the index of the todo being edited -->
+            <div>
+                <label for="edit-dialog-todo-title-input">Title:</label>
+                <input type="text" id="edit-dialog-todo-title-input" name="todoTitle" required>
+            </div>
+            <div>
+                <label for="edit-dialog-todo-description-input">Description:</label>
+                <textarea id="edit-dialog-todo-description-input" name="todoDescription"></textarea>
+            </div>
+            <div>
+                <label for="edit-dialog-todo-duedate-input">Due Date:</label>
+                <input type="date" id="edit-dialog-todo-duedate-input" name="todoDueDate" required>
+            </div>
+            <div>
+                <label for="edit-dialog-todo-priority-select">Priority:</label>
+                <select id="edit-dialog-todo-priority-select" name="todoPriority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <div>
+                <button type="submit" id="dialog-submit-edit-todo-btn">Save Changes</button>
+                <button type="button" id="dialog-cancel-edit-todo-btn">Cancel</button>
+            </div>
+        </form>
+    </dialog>
+
     
 </body>
 </html>

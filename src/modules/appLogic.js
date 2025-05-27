@@ -63,6 +63,24 @@ function deleteTodoFromCurrentProject(todoIndex){
     }
     return false;
 }
+function updateTodoInCurrentProject(index,newData){
+    const project = getCurrentProject();
+    if (project){
+        const success = project.updateTodoAtIndex(parseInt(index,10),newData);
+        return success;
+    }
+    return false;
+}
+function getTodoFromCurrentProject(index) {
+    const project = getCurrentProject();
+    if (project) {
+        const todos = project.getTodos();
+        if (index >= 0 && index < todos.length) {
+            return todos[index];
+        }
+    }
+    return null;
+}
 
 initialize();
 
@@ -73,4 +91,6 @@ export {
     getCurrentProject,
     addTodoToCurrentProject,
     deleteTodoFromCurrentProject,
+    updateTodoInCurrentProject,
+    getTodoFromCurrentProject,
 }

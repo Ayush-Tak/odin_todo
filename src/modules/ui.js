@@ -23,6 +23,15 @@ const dialogTodoPrioritySelect = document.getElementById("dialog-todo-priority-s
 const dialogSubmitTodoBtn = document.getElementById("dialog-submit-todo-btn");
 const dialogCancelTodoBtn = document.getElementById("dialog-cancel-todo-btn");
 
+// Edit Todo dialog elements 
+const editTodoDialog = document.getElementById('edit-todo-dialog');
+const editTodoIndexInput = document.getElementById('edit-todo-index-input'); // Hidden input
+const editDialogTodoTitleInput = document.getElementById('edit-dialog-todo-title-input');
+const editDialogTodoDescriptionInput = document.getElementById('edit-dialog-todo-description-input');
+const editDialogTodoDueDateInput = document.getElementById('edit-dialog-todo-duedate-input');
+const editDialogTodoPrioritySelect = document.getElementById('edit-dialog-todo-priority-select');
+const dialogSubmitEditTodoBtn = document.getElementById('dialog-submit-edit-todo-btn');
+const dialogCancelEditTodoBtn = document.getElementById('dialog-cancel-edit-todo-btn');
 
 export function renderProjects(){
     if (!projectsListUL){
@@ -71,7 +80,9 @@ export function renderTodos(){
                 li.classList.add(`priority-${todo.priority.toLowerCase()}`);
 
                 const todoContent = document.createElement('span');
+                todoContent.classList.add('todo-content-display');
                 todoContent.textContent = `${todo.title} (Due: ${todo.dueDate})`;
+                todoContent.dataset.todoIndex = index; // Store index for editing
 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = 'Delete';
@@ -136,6 +147,48 @@ function handleDialogSubmitTodo(){
         }
     }
 }
+function openEditTodoDialog(todoIndex) {
+    const todo = appLogic.getTodoFromCurrentProject(todoIndex);
+    if (todo && editTodoDialog) {
+        editTodoIndexInput.value = todoIndex;
+        editDialogTodoTitleInput.value = todo.title;
+        editDialogTodoDescriptionInput.value = todo.description;
+        editDialogTodoDueDateInput.value = todo.dueDate;
+        editDialogTodoPrioritySelect.value = todo.priority;
+        editTodoDialog.showModal();
+    } else {
+        console.error("Could not find todo to edit or edit dialog is missing.");
+    }
+}
+
+function handleDialogSubmitEditTodo() {
+    if (!editTodoDialog || !editDialogTodoTitleInput || !editDialogTodoDescriptionInput || !editDialogTodoDueDateInput || !editDialogTodoPrioritySelect || !editTodoIndexInput) {
+        console.error("One or more edit todo dialog elements are missing!");
+        return;
+    }
+
+    const index = editTodoIndexInput.value;
+    const title = editDialogTodoTitleInput.value.trim();
+    const description = editDialogTodoDescriptionInput.value.trim();
+    const dueDate = editDialogTodoDueDateInput.value;
+    const priority = editDialogTodoPrioritySelect.value;
+
+    if (title && dueDate && index !== '') {
+        const updatedData = { title, description, dueDate, priority };
+        const success = appLogic.updateTodoInCurrentProject(index, updatedData);
+        
+        if (success) {
+            renderTodos();
+            editTodoDialog.close();
+        } else {
+            alert("Could not update todo.");
+        }
+    } else {
+        alert("Please fill in all required fields for the todo.");
+    }
+}
+
+
 
 export function initializeUIEventListeners(){
     if (addProjectBtn && addProjectDialog){
@@ -211,8 +264,36 @@ export function initializeUIEventListeners(){
                     }
                 // }
             }
+                else if (event.target.classList.contains('todo-content-display')) {
+                const todoIndex = event.target.dataset.todoIndex;
+                if (todoIndex !== undefined) {
+                    openEditTodoDialog(todoIndex);
+                }
+            }
         });
-    } else {
+    } 
+    else {
         console.error("Todo list UL not found for delete listener!");
     }
+    if (dialogSubmitEditTodoBtn && editTodoDialog) {
+        dialogSubmitEditTodoBtn.addEventListener('click', (event) => {
+            // event.preventDefault(); // Good practice, though form method="dialog" might handle it
+            handleDialogSubmitEditTodo();
+        });
+    } else {
+        console.error("Submit edit todo button or dialog not found!");
+    }
+
+    if (dialogCancelEditTodoBtn && editTodoDialog) {
+        dialogCancelEditTodoBtn.addEventListener('click', () => {
+            editTodoDialog.close();
+        });
+    }
+    if (editTodoDialog) {
+        editTodoDialog.addEventListener('close', () => {
+            console.log("Edit todo dialog closed.");
+            // Optionally clear fields if needed, though they are repopulated on open
+        });
+    }
+
 }
