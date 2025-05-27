@@ -1,4 +1,5 @@
 import * as appLogic from "./appLogic.js";
+import '../style.css'
 
 // DOM elements selectors:
 const projectsListUL = document.getElementById("projects-list");
@@ -64,9 +65,22 @@ export function renderTodos(){
             li.textContent="No todos in this project";
             todoListUL.appendChild(li);
         } else {
-            todos.forEach(todo =>{
+            todos.forEach((todo,index) =>{
                 const li = document.createElement('li');
-                li.textContent= `${todo.title} (Due: ${todo.dueDate}, Priority: ${todo.priority})`
+                li.classList.add('todo-item');
+                li.classList.add(`priority-${todo.priority.toLowerCase()}`);
+
+                const todoContent = document.createElement('span');
+                todoContent.textContent = `${todo.title} (Due: ${todo.dueDate})`;
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.classList.add('delete-todo-btn');
+                deleteBtn.dataset.todoIndex = index; // Or use a unique todo ID if you implement one
+                deleteBtn.dataset.todoTitle = todo.title; // Alternative for identification
+
+                li.appendChild(todoContent);
+                li.appendChild(deleteBtn);
                 todoListUL.appendChild(li);
             });
         }
@@ -180,5 +194,25 @@ export function initializeUIEventListeners(){
         addTodoDialog.addEventListener('close',()=>{
             console.log("Todo add dialog closed");
         })
+    }
+    if (todoListUL) {
+        todoListUL.addEventListener('click', (event) => {
+            if (event.target.classList.contains('delete-todo-btn')) {
+                const todoIdentifier = event.target.dataset.todoIndex; // Or .todoTitle
+                // console.log('Attempting to delete todo with identifier:', todoIdentifier);
+                
+                // Optional: Add a confirmation dialog
+                // if (confirm('Are you sure you want to delete this todo?')) {
+                    const success = appLogic.deleteTodoFromCurrentProject(todoIdentifier);
+                    if (success) {
+                        renderTodos(); // Re-render the todos list
+                    } else {
+                        alert('Could not delete todo.');
+                    }
+                // }
+            }
+        });
+    } else {
+        console.error("Todo list UL not found for delete listener!");
     }
 }
