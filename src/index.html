@@ -3,9 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TODO</title>
+    <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
+    <header>
+        <h1>TODO LIST</h1>
+    </header>
+    <main>
+        <div class="projects-sidebar">
+            <div class="projects-content">
+                <ul id="projects-list">
+
+                </ul>
+                <button id="add-project-btn">Add New Project</button>
+            </div>
+        </div>
+        <div class="current-project">
+            <h2 id="current-project-name"></h2>
+            <div class="todo-content">
+                <ul id="todo-list">
+
+                </ul>
+                <button id="add-todo-btn">Add New Todo</button>
+            </div>
+        </div>
+    </main>
     
 </body>
 </html>
