@@ -4,18 +4,19 @@ export function createProject(name){
         todos.push(todoItem);
     };
     
-    const removeTodo =(todoTitle) => {
-        const index = todos.findIndex(todo => todo.title === todoTitle);
-        if (index >-1){
-            todos.splice(index,1);
-        }
+    const removeTodoByIndex = (index) => { // New or alternative way
+    if (index >= 0 && index < todos.length) {
+        todos.splice(index, 1);
+        return true;
+    }
+    return false;
     };
 
     const getTodos = () => todos;
     return {
         name,
         addTodo,
-        removeTodo,
+        removeTodoByIndex,
         getTodos,
     };
 }
