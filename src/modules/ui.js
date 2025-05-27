@@ -7,6 +7,13 @@ const currentProjectNameH2 = document.getElementById("current-project-name");
 const addProjectBtn = document.getElementById("add-project-btn");
 const addTodoBtn = document.getElementById("add-todo-btn");
 
+// Project dialog elements:
+const addProjectDialog = document.getElementById('add-project-dialog');
+const dialogProjectNameInput = document.getElementById('dialog-project-name-input');
+const dialogSubmitProjectBtn = document.getElementById("dialog-submit-project-btn");
+const dialogCancelProjectBtn = document.getElementById("dialog-cancel-project-btn");
+
+
 export function renderProjects(){
     if (!projectsListUL){
         console.error("Project list UL not found");
@@ -62,4 +69,54 @@ export function renderTodos(){
 export function renderAll(){
     renderProjects();
     renderTodos();
+}
+
+function handleDialogSubmitProject(){
+    if (!dialogProjectNameInput || !addProjectDialog){
+        console.error("dialog project name input or project dialog is lost matey!!!")
+        return;
+    }
+    const projectName = dialogProjectNameInput.value.trim();
+    if(projectName){
+        const newProject = appLogic.addProject(projectName);
+        if (newProject){
+            appLogic.setCurrentProject(projectName);
+            renderAll();
+            dialogProjectNameInput.value='';
+            addProjectDialog.close();
+        }else{
+            alert(`Project ${projectName} already exists or could not be created :( `);
+        }
+    } else {
+        alert("Please enter a project name.");
+    }
+}
+
+export function initializeUIEventListeners(){
+    if (addProjectBtn && addProjectDialog){
+        addProjectBtn.addEventListener('click',()=> {
+            addProjectDialog.showModal();
+        });
+    }else{
+        console.error("Add project button or project dialog not found");
+    }
+    if (dialogSubmitProjectBtn){
+        dialogSubmitProjectBtn.addEventListener('click',(event)=>{
+            event.preventDefault();
+            handleDialogSubmitProject();
+        })
+    } else {console.error("Dialog submit button not found :(")}
+
+    if (dialogCancelProjectBtn && addProjectDialog){
+        dialogCancelProjectBtn.addEventListener('click',()=>{
+            addProjectDialog.close();
+            dialogProjectNameInput.value='';
+        })
+    }
+
+    if (addProjectDialog){
+        addProjectDialog.addEventListener('close',()=>{
+            console.log("Dialog closed for new project")
+        })
+    }
 }
